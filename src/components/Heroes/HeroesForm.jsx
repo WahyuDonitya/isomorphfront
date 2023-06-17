@@ -16,9 +16,10 @@ import {
 } from "@mui/material";
 import React, { useState } from "react";
 import axios from "axios";
-import { useLoaderData } from "react-router-dom";
+import { Form, useLoaderData } from "react-router-dom";
 import "./HeroesForm.css"
-import { DataGrid } from "@mui/x-data-grid";
+import { DataGrid, GridToolbar } from "@mui/x-data-grid";
+import { Delete } from "@mui/icons-material";
 
 const HeroesForm = () => {
   const theme = createTheme();
@@ -38,6 +39,8 @@ const HeroesForm = () => {
     // Lakukan sesuatu dengan array roles
     console.log(roles);
   }
+
+  
 
 
   return (
@@ -130,8 +133,6 @@ const HeroesForm = () => {
               >
                 INSERT DATA
               </Button>
-            
-
             </Box>
 
       <hr /> <br />
@@ -146,9 +147,22 @@ const HeroesForm = () => {
             },
           }}
           pageSizeOptions={[5, 10]}
+          components={{
+            Toolbar: GridToolbar,
+          }}
       />
     </div>
   );
+};
+
+const handleDelete = async (id) => {
+  
+  try {
+    await axios.delete(`http://localhost:3000/api/v1/heroes/${id}`);
+    console.log("Data berhasil dihapus");
+  } catch (error) {
+    console.error("Terjadi kesalahan saat menghapus data", error);
+  }
 };
 
 export default HeroesForm;
@@ -186,6 +200,20 @@ export const Heroesloader = async () => {
             },
           },
         { field: "legs", headerName: "Legs", flex: 1 },
+        {
+          field: "action",
+          headerName: "Action",
+          flex: 1,
+          renderCell: (params) => {
+            return (
+              <Delete
+                color="error"
+                onClick={() => handleDelete(params.row._id)}
+                style={{ cursor: "pointer" }}
+              />
+            );
+          },
+        },
     ]
 
     result.rows = data
