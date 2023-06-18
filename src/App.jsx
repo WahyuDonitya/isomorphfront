@@ -19,6 +19,7 @@ import RequireAuth from "./components/Auth/RequireAuth";
 import Manager from "./pages/Backend/Manager";
 import Visitor from "./pages/Backend/Visitor";
 import HeroesForm from "./components/Heroes/HeroesForm";
+import Heroes from "./pages/Backend/Admin/Heroes";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -41,7 +42,7 @@ const router = createBrowserRouter(
             <Route path="admin">
               <Route
                 path="movie"
-                element={<HeroesForm />}
+                element={<Heroes />}
                 loader={Heroesloader}
                 action={MovieFormAction}
               ></Route>
