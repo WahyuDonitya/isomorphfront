@@ -49,8 +49,8 @@ const RequireAuth = (props) => {
   if (roleSesuai === true) {
     return <Outlet />;
   } else {
-    // return <Navigate to="/dashboard" replace />;
-    return <ErrorPage status="404" />;
+    return <Navigate to="/login" replace />;
+    // return <ErrorPage status="404" />;
   }
 };
 

@@ -20,6 +20,9 @@ import Manager from "./pages/Backend/Manager";
 import Visitor from "./pages/Backend/Visitor";
 import HeroesForm from "./components/Heroes/HeroesForm";
 import Heroes from "./pages/Backend/Admin/Heroes";
+import DashboardAdmin from "./pages/Backend/Admin/DashboardAdmin";
+import ApprovalAdmin from "./pages/Backend/Admin/ApprovalAdmin";
+import { Approvalloader } from "./components/Approval/ApprovalData";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -31,15 +34,12 @@ const router = createBrowserRouter(
 
 
       <Route element={<PersistLogin />}>
-        <Route element={<RequireAuth />}>
-          <Route element={<Backend />}>
-            <Route path="dashboard" element={<Dashboard />} />
-          </Route>
-        </Route>
 
         <Route element={<RequireAuth allowedRoles={["admin"]} />}>
           <Route element={<Backend />}>
             <Route path="admin">
+              <Route path="dashboard" element={<DashboardAdmin/>}></Route>
+              <Route path="approval" element={<ApprovalAdmin/>} loader={Approvalloader}></Route>
               <Route
                 path="movie"
                 element={<Heroes />}
@@ -60,6 +60,7 @@ const router = createBrowserRouter(
           <Route element={<Backend />}>
             <Route path="visitor" element={<Visitor
              />} />
+             <Route path="dashboard" element={<Dashboard />} />
           </Route>
         </Route>
       </Route>

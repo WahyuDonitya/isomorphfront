@@ -40,10 +40,10 @@ const Visitor = () => {
     try {
       const teamData = {
         teamName: teamName,
+        teamleader: pengguna.nama,
         teamMembers: formData.map((data) => ({
           name: data.name,
           value: data.value,
-          teamleader: data.teamleader,
           status: data.status
         })),
         status : 0

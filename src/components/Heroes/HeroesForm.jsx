@@ -20,6 +20,7 @@ import { Form, useLoaderData } from "react-router-dom";
 import "./HeroesForm.css"
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { Delete } from "@mui/icons-material";
+import { toast , ToastContainer} from "react-toastify";
 
 const HeroesForm = () => {
   const theme = createTheme();
@@ -151,6 +152,7 @@ const HeroesForm = () => {
             Toolbar: GridToolbar,
           }}
       />
+      <ToastContainer />
     </div>
   );
 };
@@ -160,6 +162,7 @@ const handleDelete = async (id) => {
   try {
     await axios.delete(`http://localhost:3000/api/v1/heroes/${id}`);
     console.log("Data berhasil dihapus");
+    toast.success('Data berhasil Dihapus!');
   } catch (error) {
     console.error("Terjadi kesalahan saat menghapus data", error);
   }

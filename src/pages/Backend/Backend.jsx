@@ -23,7 +23,7 @@
  import InboxIcon from "@mui/icons-material/MoveToInbox";
  import MailIcon from "@mui/icons-material/Mail";
  import { Link, Navigate, Outlet, useNavigate } from "react-router-dom";
- import { Fort, Groups, Home, Logout, Man, ManageAccounts, Movie } from "@mui/icons-material";
+ import { Approval, Fort, Groups, Home, Logout, Man, ManageAccounts, Movie } from "@mui/icons-material";
  import { useDispatch, useSelector } from "react-redux";
  import { authSliceActions } from "../../features/auth/authSlice";
  import { logout } from "../../api/authApi";
@@ -100,9 +100,17 @@
      const pengguna = auth.pengguna;
      const dispatch = useDispatch();
      const navigate = useNavigate();
-     let menus = [
+     let menus = []
+     let visitordashboard = [
+        {
+            link: "/dashboard",
+            text: "Home",
+            icon: <Home />,
+        },
+    ];
+     let admindashboard = [
          {
-             link: "/dashboard",
+             link: "/admin/dashboard",
              text: "Home",
              icon: <Home />,
          },
@@ -114,11 +122,11 @@
              icon: <Fort />,
          },
      ];
-     let menusManager = [
+     let menusApproval = [
          {
-             link: "/manager",
-             text: "Manager",
-             icon: <ManageAccounts />,
+             link: "admin/approval",
+             text: "Teams Approval",
+             icon: <Approval />,
          },
      ];
      let menusVisitor = [
@@ -137,11 +145,9 @@
     ];
  
      if (pengguna.roles[0] === "admin") {
-         menus = menus.concat(menusAdmin, menusManager, menusVisitor);
-     } else if (pengguna.roles[0] === "manager") {
-         menus = menus.concat(menusManager, menusVisitor);
+         menus = menus.concat(admindashboard,menusAdmin, menusApproval, menusVisitor);
      } else if (pengguna.roles[0] === "visitor") {
-         menus = menus.concat(menusVisitorTeam);
+         menus = menus.concat(visitordashboard,menusVisitorTeam);
      }
  
      const theme = useTheme();

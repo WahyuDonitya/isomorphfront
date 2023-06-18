@@ -3,7 +3,7 @@ import { deepPurple } from "@mui/material/colors";
 import React from "react";
 import { useRouteError } from "react-router-dom";
 
-const ErrorPage = () => {
+const ErrorPage = (props) => {
   const error = useRouteError();
   return (
     <div

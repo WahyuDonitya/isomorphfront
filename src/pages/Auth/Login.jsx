@@ -20,7 +20,7 @@ import { login } from "../../api/authApi";
 import { Alert, LinearProgress } from "@mui/material";
 import { Navigate, redirect, useNavigate } from "react-router-dom";
 import jwtDecode from "jwt-decode";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { authSliceActions } from "../../features/auth/authSlice";
 
 function Copyright(props) {
@@ -46,6 +46,8 @@ const theme = createTheme();
 export default function Login() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const auth = useSelector((state) => state.auth);
+  const pengguna = auth.pengguna;
   const {
     handleSubmit,
     control,
@@ -90,7 +92,13 @@ export default function Login() {
         Login berhasil, sedang redirecting ke halaman home ...
       </Alert>
     );
-    return <Navigate to="/dashboard" />;
+
+    if(pengguna.roles[0] == "admin"){
+      return <Navigate to="/admin/dashboard" />;
+    }else if (pengguna.roles[0] == "visitor"){
+      return <Navigate to="/dashboard" />;
+    }
+    
   }
 
   return (
