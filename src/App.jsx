@@ -41,7 +41,7 @@ const router = createBrowserRouter(
               <Route path="dashboard" element={<DashboardAdmin/>}></Route>
               <Route path="approval" element={<ApprovalAdmin/>} loader={Approvalloader}></Route>
               <Route
-                path="movie"
+                path="hero"
                 element={<Heroes />}
                 loader={Heroesloader}
                 action={MovieFormAction}

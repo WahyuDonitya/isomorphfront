@@ -16,7 +16,7 @@ import {
 } from "@mui/material";
 import React, { useState } from "react";
 import axios from "axios";
-import { Form, useLoaderData } from "react-router-dom";
+import { Form, useLoaderData, useNavigate } from "react-router-dom";
 import "./HeroesForm.css"
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { Delete } from "@mui/icons-material";
@@ -25,11 +25,19 @@ import { toast , ToastContainer} from "react-toastify";
 const HeroesForm = () => {
   const theme = createTheme();
   const loaderData = useLoaderData();
+  const navigate = useNavigate();
   console.log(loaderData);
 
   const [carryChecked, setCarryChecked] = useState(false);
   const [durableChecked, setDurableChecked] = useState(false);
   const [nukerChecked, setNukerChecked] = useState(false);
+  const [hero, sethero] = useState({
+    name: "name",
+    localized_name: "local",
+    primary_attr: "attr",
+    attack_type: "Magick",
+    legs: 2
+  })
 
   const HandleSubmit = async (event) => {
     const roles = [];
@@ -38,9 +46,27 @@ const HeroesForm = () => {
     if (nukerChecked) roles.push("nuker");
 
     // Lakukan sesuatu dengan array roles
-    console.log(roles);
+    const teamData = {
+      name: hero.name,
+      localized_name: hero.localized_name,
+      primary_attr: hero.primary_attr,
+      attack_type: hero.attack_type,
+      roles: roles,
+      legs: hero.legs
+    };
+    const response = await axios.post("http://localhost:3000/api/v1/heroes/hero", teamData);
+    
   }
 
+  const handleInputChange = (event) => {
+    const target = event.target
+    const name = target.name;
+    let value = target.value
+    sethero((prevState) => { 
+        return {...prevState, [name]:value}
+    })
+
+  }
   
 
 
@@ -54,7 +80,8 @@ const HeroesForm = () => {
                 sx={{ my: 3 }}
                 fullWidth
                 helperText="Masukkan Nama Hero"
-                name="heroname"
+                name="name"
+                onChange={handleInputChange}
               ></TextField>
 
 
@@ -65,6 +92,7 @@ const HeroesForm = () => {
                 fullWidth
                 helperText="Masukkan Localized name"
                 name="localized_name"
+                onChange={handleInputChange}
               ></TextField>
 
 
@@ -75,6 +103,7 @@ const HeroesForm = () => {
                 fullWidth
                 helperText="Masukkan Attribute"
                 name="primary_attr"
+                onChange={handleInputChange}
               ></TextField>
 
               <TextField
@@ -84,6 +113,7 @@ const HeroesForm = () => {
                 fullWidth
                 helperText="Attack Type"
                 name="attack_type"
+                onChange={handleInputChange}
               ></TextField>
               
               <FormControlLabel
@@ -124,6 +154,7 @@ const HeroesForm = () => {
                 fullWidth
                 helperText="Legs input"
                 name="legs"
+                onChange={handleInputChange}
               ></TextField>
 
               <Button
@@ -144,7 +175,7 @@ const HeroesForm = () => {
         columns={loaderData.columns}
         initialState={{
             pagination: {
-              paginationModel: { page: 0, pageSize: 5 },
+              paginationModel: { page: 0, pageSize: 10 },
             },
           }}
           pageSizeOptions={[5, 10]}
