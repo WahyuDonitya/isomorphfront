@@ -62,7 +62,9 @@ const Visitor = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("http://localhost:3000/api/v1/heroes");
+        // https://api.opendota.com/api/heroes
+        const response = await axios.get("https://api.opendota.com/api/heroes");
+        // console.log(response.data);
         setOptions(response.data);
       } catch (error) {
         console.error("Error fetching options:", error);
