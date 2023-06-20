@@ -1,9 +1,9 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, createTheme, ThemeProvider } from "@mui/material";
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, createTheme, ThemeProvider, TableContainer, Table, TableHead, TableRow, TableCell, TableBody, Paper } from "@mui/material";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import React, { useEffect, useState } from "react";
 import { useLoaderData } from "react-router-dom";
 import axios from "axios";
-import { Delete, DoneOutline, Visibility } from "@mui/icons-material";
+import { Delete, DoneOutline, ThumbDown, Visibility } from "@mui/icons-material";
 import { toast, ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -74,6 +74,20 @@ const ApprovalData = () => {
         );
       },
     },
+    {
+      field: "reject",
+      headerName: "Reject",
+      flex: 1,
+      renderCell: (params) => {
+        return (
+          <ThumbDown
+            color="error"
+            onClick={() => handleReject(params.row._id)}
+            style={{ cursor: "pointer" }}
+          />
+        );
+      },
+    },
   ];
 
   const panggil = async () => {
@@ -105,6 +119,16 @@ const ApprovalData = () => {
       await axios.post(`http://localhost:3000/api/v1/team/approve/${id}`);
       console.log("Data berhasil diapprove");
       toast.success("Data berhasil Diapproved!");
+    } catch (error) {
+      console.error("Terjadi kesalahan saat menghapus data", error);
+    }
+  };
+
+  const handleReject = async (id) => {
+    try {
+      await axios.post(`http://localhost:3000/api/v1/team/reject/${id}`);
+      console.log("Data berhasil diapprove");
+      toast.success("Data berhasil Direject!");
     } catch (error) {
       console.error("Terjadi kesalahan saat menghapus data", error);
     }
@@ -145,9 +169,35 @@ const ApprovalData = () => {
             <DialogContent>
               <p>Team Name: {selectedTeam.teamName}</p>
               <p>Team Leader: {selectedTeam.teamleader}</p>
-              {selectedTeam.teamMembers.map((answer, i) => {
-                return <p key={i}>Hero {i + 1}: {answer.value}</p>;
-              })}
+              
+                {/* // return <p key={i}>Hero {i + 1}: {answer.value}</p>; */}
+                  <TableContainer component={Paper}>
+                    <Table sx={{ minWidth: 550 }} aria-label="simple table">
+                      <TableHead>
+                        <TableRow>
+                          <TableCell>No .</TableCell>
+                          <TableCell align="left">Members Name</TableCell>
+                          <TableCell align="left">Heroes</TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {selectedTeam.teamMembers.map((answer, i) => (
+                          <TableRow
+                            key={i}
+                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                          >
+                            <TableCell component="th" scope="row">
+                              {i+1}
+                            </TableCell>
+                            <TableCell align="left">{answer.name}</TableCell>
+                            <TableCell align="left">{answer.value}</TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                
+
             </DialogContent>
             <DialogActions>
               <Button onClick={handleCloseDialog} color="primary">
