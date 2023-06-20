@@ -1,24 +1,32 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, createTheme } from "@mui/material";
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, createTheme, ThemeProvider } from "@mui/material";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import React, { useEffect, useState } from "react";
 import { useLoaderData } from "react-router-dom";
 import axios from "axios";
 import { Delete, DoneOutline, Visibility } from "@mui/icons-material";
 import { toast, ToastContainer } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: '#673AB7', 
+    },
+  },
+  typography: {
+    fontFamily: 'Arial, sans-serif',
+  },
+});
 
 const ApprovalData = () => {
-  const theme = createTheme();
   const loaderData = useLoaderData()
 
-//   ini untuk modal namun belum bisa
   const [openDialog, setOpenDialog] = useState(false);
   const [selectedTeam, setSelectedTeam] = useState();
   const [data, setdata] = useState([])
 
   useEffect(() => {
     panggil();
-  
   }, [])
 
   let columns = [
@@ -26,7 +34,7 @@ const ApprovalData = () => {
     { field: "teamName", headerName: "Team Name", flex: 1 },
     { field: "teamleader", headerName: "Team Leader", flex: 1 },
     { field: "status", headerName: "Status", flex: 1 },
-    // {
+        // {
     //     field: "roles",
     //     headerName: "Roles",
     //     flex: 1,
@@ -68,77 +76,58 @@ const ApprovalData = () => {
     },
   ];
 
-  const panggil = async (first) => { 
-    let data;
-    await axios
-    .get("http://localhost:3000/api/v1/team/getneedApprove")
-    .then((result) => {
-      setdata(result.data);
-      console.log(result.data);
-    })
-    .catch((error) => {
-      if (axios.isCancel(error)) {
-        console.log("Canceled");
-      } else {
-        console.log(error);
-      }
-    });
-   }
-  
+  const panggil = async () => {
+    try {
+      const response = await axios.get("http://localhost:3000/api/v1/team/getneedApprove");
+      setdata(response.data);
+      console.log(response.data);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
 
-
-  console.log(loaderData);
-  const getRowId = (row) => row._id;
-
-// Ini untuk tutup Modal namun belum berhasil
   const handleCloseDialog = () => {
     setOpenDialog(false);
   };
 
   const handleDetail = async (id) => {
-    // event.preventDefault();
-    console.log(id);
-    let data;
-  await axios
-    .get(`http://localhost:3000/api/v1/team/get/${id}`)
-    .then((result) => {
-      data = result.data;
-    })
-    .catch((error) => {
-      if (axios.isCancel(error)) {
-        console.log("Canceled");
-      } else {
-        console.log(error);
-      }
-    });
+    try {
+      const response = await axios.get(`http://localhost:3000/api/v1/team/get/${id}`);
+      setSelectedTeam(response.data);
+      setOpenDialog(true);
+    } catch (error) {
+      console.error("Error fetching team detail:", error);
+    }
+  };
 
-    console.log(data);
-
-    // ini untuk mengeluarkan modal, tapi belum berhasil
-    setSelectedTeam(data);
-    setOpenDialog(true);
-};
-  
-
-  
+  const handleApprove = async (id) => {
+    try {
+      await axios.post(`http://localhost:3000/api/v1/team/approve/${id}`);
+      console.log("Data berhasil diapprove");
+      toast.success("Data berhasil Diapproved!");
+    } catch (error) {
+      console.error("Terjadi kesalahan saat menghapus data", error);
+    }
+  };
 
   return (
-    <div>
-      <h3>Teams need approval</h3>
-      <DataGrid
-        rows={data}
-        columns={columns}
-        initialState={{
-          pagination: {
-            paginationModel: { page: 0, pageSize: 5 },
-          },
-        }}
-        pageSizeOptions={[5, 10]}
-        components={{
-          Toolbar: GridToolbar,
-        }}
-        getRowId={getRowId}
-        renderCell = { (params) => {
+    <ThemeProvider theme={theme}>
+      <div>
+        <h3>Teams need approval</h3>
+        <DataGrid
+          rows={data}
+          columns={columns}
+          initialState={{
+            pagination: {
+              paginationModel: { page: 0, pageSize: 5 },
+            },
+          }}
+          pageSizeOptions={[5, 10]}
+          components={{
+            Toolbar: GridToolbar,
+          }}
+          getRowId={(row) => row._id}
+          renderCell={(params) => {
             return (
               <Visibility
                 color="primary"
@@ -148,46 +137,31 @@ const ApprovalData = () => {
               />
             );
           }}
-      />
+        />
 
-    {/* ini untuk mengeluarkan modal, tapi belum berhasil */}
-    {/* {{selectedTeam}} */}
-      {selectedTeam && (
-        <Dialog open={openDialog} onClose={handleCloseDialog}>
-          <DialogTitle>Team Detail</DialogTitle>
-          <DialogContent>
-            <p>Team Name: {selectedTeam.teamName}</p>
-            <p>Team Leader: {selectedTeam.teamleader}</p>
-            {selectedTeam.teamMembers.map((answer, i) => {                   
-              // Return the element. Also pass key     
-              return (<p key={i}>Hero {i+1}: {answer.value}</p>) 
-            })}
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleCloseDialog} color="primary">
-              Close
-            </Button>
-          </DialogActions>
-        </Dialog>
-      )}
+        {selectedTeam && (
+          <Dialog open={openDialog} onClose={handleCloseDialog}>
+            <DialogTitle>Team Detail</DialogTitle>
+            <DialogContent>
+              <p>Team Name: {selectedTeam.teamName}</p>
+              <p>Team Leader: {selectedTeam.teamleader}</p>
+              {selectedTeam.teamMembers.map((answer, i) => {
+                return <p key={i}>Hero {i + 1}: {answer.value}</p>;
+              })}
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleCloseDialog} color="primary">
+                Close
+              </Button>
+            </DialogActions>
+          </Dialog>
+        )}
 
-      <ToastContainer />
-    </div>
+        <ToastContainer />
+      </div>
+    </ThemeProvider>
   );
 };
-
-const handleApprove = async (id) => {
-  try {
-    await axios.post(`http://localhost:3000/api/v1/team/approve/${id}`);
-    console.log("Data berhasil diapprove");
-    toast.success("Data berhasil Diapproved!");
-  } catch (error) {
-    console.error("Terjadi kesalahan saat menghapus data", error);
-  }
-};
-
-
-
 
 export default ApprovalData;
 
