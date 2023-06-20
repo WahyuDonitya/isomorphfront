@@ -5,13 +5,24 @@ import { Delete } from '@mui/icons-material';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: '#673AB7', 
+    },
+  },
+  typography: {
+    fontFamily: 'Arial, sans-serif', 
+  },
+});
 
 const Visitor = () => {
   const auth = useSelector((state) => state.auth);
   const pengguna = auth.pengguna;
 
-  const [formData, setFormData] = useState([{ name: '', value: null , teamleader : pengguna.nama}]);
+  const [formData, setFormData] = useState([{ name: '', value: null, teamleader: pengguna.nama }]);
   const [teamName, setTeamName] = useState('');
 
   const handleInputChange = (index, event) => {
@@ -26,7 +37,7 @@ const Visitor = () => {
   };
 
   const handleAddFields = () => {
-    setFormData([...formData, { name: '', value: null , teamleader : pengguna.nama}]);
+    setFormData([...formData, { name: '', value: null, teamleader: pengguna.nama }]);
   };
 
   const handleRemoveFields = (index) => {
@@ -44,11 +55,11 @@ const Visitor = () => {
         teamMembers: formData.map((data) => ({
           name: data.name,
           value: data.value,
-          status: data.status
+          status: data.status,
         })),
-        status : 0
+        status: 0,
       };
-  
+
       const response = await axios.post("http://localhost:3000/api/v1/team/add", teamData);
       console.log(response.data);
       toast.success('Data berhasil disimpan!');
@@ -87,71 +98,67 @@ const Visitor = () => {
   };
 
   return (
-    <>
-      <h3>Add Teams</h3>
-      <form onSubmit={handleSubmit}>
-      <Grid container spacing={2} sx={{mb: 3}}>
-          <Grid item xs={12}>
-            <TextField
-              label="Nama Team"
-              name="teamName"
-              value={teamName}
-              onChange={handleTeamNameChange}
-              fullWidth
-            />
-          </Grid>
-        </Grid>
-        <h4>Anggota Team</h4>
-        {formData.map((field, index) => (
-          <Grid container spacing={2} key={index}>
-            <Grid item xs={12} sm={6}>
+    <ThemeProvider theme={theme}>
+      <Container maxWidth="sm" sx={{ backgroundColor: '#F5F5F5', padding: '20px', borderRadius: '10px' }}>
+        <h3 style={{ textAlign: 'center', marginBottom: '20px', color: '#673AB7', fontFamily: 'Arial, sans-serif' }}>
+          Add Teams
+        </h3>
+        <form onSubmit={handleSubmit}>
+          <Grid container spacing={2} sx={{ marginBottom: 3 }}>
+            <Grid item xs={12}>
               <TextField
-                label="Nama"
-                name= "name"
-                value={field.name}
-                onChange={(event) => handleInputChange(index, event)}
+                label="Nama Team"
+                name="teamName"
+                value={teamName}
+                onChange={handleTeamNameChange}
                 fullWidth
               />
             </Grid>
-            <Grid item xs={12} sm={5}>
-              <Autocomplete
-                value={field.localized_name}
-                onChange={(event, newValue) => handleChange(index, newValue)}
-                options={options}
-                getOptionLabel={(option) => option.localized_name}
-                renderInput={(params) => (
-                  <TextField {...params} label="Pilih Hero" fullWidth />
-                )}
-              />
-            </Grid>
-
-            <Grid item xs={1}>
-              <IconButton aria-label="hapus" onClick={() => handleRemoveFields(index)}>
-                <Delete />
-              </IconButton>
-            </Grid>
-            {index !== formData.length - 1 && (
-              <Grid item xs={12}>
-               
-                <hr style={{ margin: '10px 0' }} />
-              </Grid>
-            )}
           </Grid>
-        ))}
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={handleAddFields}
-          sx={{ mt: 2, mr: 2 }}
-        >
-          Tambah Field
-        </Button>
-        <Button type="submit" variant="contained" sx={{ mt: 2 }}>
-          Submit
-        </Button>
-      </form>
-      <ToastContainer />
-    </>
+          <h4 style={{ color: '#673AB7', fontFamily: 'Arial, sans-serif' }}>Anggota Team</h4>
+          {formData.map((field, index) => (
+            <Grid container spacing={2} key={index}>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  label="Nama"
+                  name="name"
+                  value={field.name}
+                  onChange={(event) => handleInputChange(index, event)}
+                  fullWidth
+                />
+              </Grid>
+              <Grid item xs={12} sm={5}>
+                <Autocomplete
+                  value={field.localized_name}
+                  onChange={(event, newValue) => handleChange(index, newValue)}
+                  options={options}
+                  getOptionLabel={(option) => option.localized_name}
+                  renderInput={(params) => <TextField {...params} label="Pilih Hero" fullWidth />}
+                />
+              </Grid>
+
+              <Grid item xs={1}>
+                <IconButton aria-label="hapus" onClick={() => handleRemoveFields(index)}>
+                  <Delete />
+                </IconButton>
+              </Grid>
+              {index !== formData.length - 1 && (
+                <Grid item xs={12}>
+                  <hr style={{ margin: '10px 0' }} />
+                </Grid>
+              )}
+            </Grid>
+          ))}
+          <Button variant="contained" color="primary" onClick={handleAddFields} sx={{ mt: 2, mr: 2 }}>
+            Tambah Field
+          </Button>
+          <Button type="submit" variant="contained" sx={{ mt: 2 }}>
+            Submit
+          </Button>
+        </form>
+        <ToastContainer />
+      </Container>
+    </ThemeProvider>
   );
 };
 
