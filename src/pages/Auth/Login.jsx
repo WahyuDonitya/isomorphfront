@@ -54,8 +54,8 @@ export default function Login() {
     formState: { errors },
   } = useForm({
     defaultValues: {
-      nama: "jojo",
-      password: "aA1!",
+      nama: "",
+      password: "",
     },
     resolver: joiResolver(schema),
   });
@@ -111,7 +111,7 @@ export default function Login() {
           sm={4}
           md={7}
           sx={{
-            backgroundImage: "url(https://source.unsplash.com/random)",
+            backgroundImage: "url(https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/4b894bad-293d-4ccf-8dd4-9d6f213f80ce/d5vszt4-753173cb-2782-48e5-911c-39c41a3488ae.jpg/v1/fill/w_1024,h_576,q_75,strp/dota_2_logo_minimal_white_wallpaper_by_noblepress_d5vszt4-fullview.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9NTc2IiwicGF0aCI6IlwvZlwvNGI4OTRiYWQtMjkzZC00Y2NmLThkZDQtOWQ2ZjIxM2Y4MGNlXC9kNXZzenQ0LTc1MzE3M2NiLTI3ODItNDhlNS05MTFjLTM5YzQxYTM0ODhhZS5qcGciLCJ3aWR0aCI6Ijw9MTAyNCJ9XV0sImF1ZCI6WyJ1cm46c2VydmljZTppbWFnZS5vcGVyYXRpb25zIl19.hsGXBDNG7zh-cTFqOYCFKIOqe4vg57l8SjOSk0Fec_0)",
             backgroundRepeat: "no-repeat",
             backgroundColor: (t) =>
               t.palette.mode === "light"

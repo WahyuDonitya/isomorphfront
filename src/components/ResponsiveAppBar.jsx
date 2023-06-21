@@ -74,7 +74,7 @@ function ResponsiveAppBar() {
                 textDecoration: "none",
               }}
             >
-              WIBU
+              DOTA TEAMS MANAGEMENT
             </Typography>
 
             <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
@@ -134,7 +134,7 @@ function ResponsiveAppBar() {
             >
               WIBU
             </Typography>
-            <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
+            {/* <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
               {pages.map((page, index) => (
                 <Link key={index} to={page.url}>
                   <Button
@@ -176,7 +176,7 @@ function ResponsiveAppBar() {
                   </MenuItem>
                 ))}
               </Menu>
-            </Box>
+            </Box> */}
           </Toolbar>
         </Container>
       </AppBar>
