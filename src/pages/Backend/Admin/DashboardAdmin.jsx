@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   AppBar,
   Badge,
@@ -15,6 +15,7 @@ import {
   ThemeProvider,
 } from "@mui/material";
 import { NotificationImportant, Title } from "@mui/icons-material";
+import axios from "axios";
 
 const theme = createTheme({
   palette: {
@@ -24,7 +25,26 @@ const theme = createTheme({
   },
 });
 
+
+
 const DashboardAdmin = () => {
+  const [report, setreport] = useState()
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // https://api.opendota.com/api/heroes
+        const response = await axios.get("http://localhost:3000/api/v1/team/getReport");
+        console.log(response.data.data);
+        setreport(response.data.data);
+      } catch (error) {
+        console.error("Error fetching options:", error);
+      }
+    };
+  
+    fetchData();
+  }, []);
+
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
@@ -55,6 +75,10 @@ const DashboardAdmin = () => {
                 <Typography variant="h6" color="white">
                   Grid Total Teams
                 </Typography>
+
+                <Typography variant="h5" color="white">
+                  {report.countApproval}
+                </Typography>
               </Paper>
             </Grid>
             {/* Total Teams to Approve */}
@@ -70,6 +94,10 @@ const DashboardAdmin = () => {
               >
                 <Typography variant="h6" color="white">
                   Grid Total Teams to Approve
+                </Typography>
+
+                <Typography variant="h5" color="white">
+                  {report.needApproval}
                 </Typography>
               </Paper>
             </Grid>
@@ -87,6 +115,10 @@ const DashboardAdmin = () => {
                 <Typography variant="h6" color="white">
                   Grid Total Approved Teams
                 </Typography>
+
+                <Typography variant="h5" color="white">
+                  {report.allApproved}
+                </Typography>
               </Paper>
             </Grid>
 
@@ -102,6 +134,10 @@ const DashboardAdmin = () => {
               >
                 <Typography variant="h6" color="white">
                   Grid Total rejected
+                </Typography>
+
+                <Typography variant="h5" color="white">
+                  {report.allRejected}
                 </Typography>
               </Paper>
             </Grid>
