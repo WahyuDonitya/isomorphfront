@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   AppBar,
   Badge,
@@ -15,6 +15,8 @@ import {
   ThemeProvider,
 } from "@mui/material";
 import { NotificationImportant, Title } from "@mui/icons-material";
+import { useSelector } from "react-redux";
+import axios from "axios";
 
 const theme = createTheme({
   palette: {
@@ -25,6 +27,26 @@ const theme = createTheme({
 });
 
 const Dashboard = () => {
+
+  const auth = useSelector((state) => state.auth);
+  const pengguna = auth.pengguna;
+
+  const [report, setreport] = useState()
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(`http://localhost:3000/api/v1/team/getReportLogin/${pengguna.nama}`);
+        console.log(response.data.data);
+        setreport(response.data.data);
+      } catch (error) {
+        console.error("Error fetching options:", error);
+      }
+    };
+  
+    fetchData();
+  }, []);
+
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
@@ -53,7 +75,11 @@ const Dashboard = () => {
                 }}
               >
                 <Typography variant="h6" color="white">
-                  Grid Total Teams
+                  Total Teams
+                </Typography>
+
+                <Typography variant="h5" color="white">
+                  {report && report.countApproval}
                 </Typography>
               </Paper>
             </Grid>
@@ -69,7 +95,11 @@ const Dashboard = () => {
                 }}
               >
                 <Typography variant="h6" color="white">
-                  Grid Total Teams to Approve
+                  Total Teams need Approval
+                </Typography>
+
+                <Typography variant="h5" color="white">
+                  {report && report.needApproval}
                 </Typography>
               </Paper>
             </Grid>
@@ -85,7 +115,11 @@ const Dashboard = () => {
                 }}
               >
                 <Typography variant="h6" color="white">
-                  Grid Total Approved Teams
+                  Total Teams Approved
+                </Typography>
+
+                <Typography variant="h5" color="white">
+                  {report && report.allApproved}
                 </Typography>
               </Paper>
             </Grid>
@@ -101,7 +135,11 @@ const Dashboard = () => {
                 }}
               >
                 <Typography variant="h6" color="white">
-                  Grid Total rejected
+                   Total Team rejected
+                </Typography>
+
+                <Typography variant="h5" color="white">
+                  {report && report.allRejected}
                 </Typography>
               </Paper>
             </Grid>

@@ -32,7 +32,6 @@ const DashboardAdmin = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // https://api.opendota.com/api/heroes
         const response = await axios.get("http://localhost:3000/api/v1/team/getReport");
         console.log(response.data.data);
         setreport(response.data.data);
@@ -73,11 +72,11 @@ const DashboardAdmin = () => {
                 }}
               >
                 <Typography variant="h6" color="white">
-                  Grid Total Teams
+                  Total Teams
                 </Typography>
 
                 <Typography variant="h5" color="white">
-                  {report.countApproval}
+                  {report && report.countApproval}
                 </Typography>
               </Paper>
             </Grid>
@@ -93,11 +92,11 @@ const DashboardAdmin = () => {
                 }}
               >
                 <Typography variant="h6" color="white">
-                  Grid Total Teams to Approve
+                  Total Teams need Approval
                 </Typography>
 
                 <Typography variant="h5" color="white">
-                  {report.needApproval}
+                  {report && report.needApproval}
                 </Typography>
               </Paper>
             </Grid>
@@ -113,11 +112,11 @@ const DashboardAdmin = () => {
                 }}
               >
                 <Typography variant="h6" color="white">
-                  Grid Total Approved Teams
+                  Total Teams Approved
                 </Typography>
 
                 <Typography variant="h5" color="white">
-                  {report.allApproved}
+                  {report && report.allApproved}
                 </Typography>
               </Paper>
             </Grid>
@@ -133,11 +132,11 @@ const DashboardAdmin = () => {
                 }}
               >
                 <Typography variant="h6" color="white">
-                  Grid Total rejected
+                   Total Team rejected
                 </Typography>
 
                 <Typography variant="h5" color="white">
-                  {report.allRejected}
+                  {report && report.allRejected}
                 </Typography>
               </Paper>
             </Grid>
